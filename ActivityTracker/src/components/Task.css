@@ -1,0 +1,14 @@
+.task {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  border: 0.1em solid mediumspringgreen;
+  border-radius: 15px;
+  padding: 1em;
+}
+.taskProgress {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.taskTitle {
+  font-size: 2em;
+}
