@@ -1,27 +1,34 @@
 import { Check, Circle } from "@mui/icons-material";
 import "./Task.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { Button, MenuItem, Select } from "@mui/material";
+import sailormoon from "@assets/sailormoon.mp3";
+import useWithSound from "@hooks/soundHook";
+import { TaskContext } from "@/Contexts";
 
 function TaskProgress() {
-  const [done, setDone] = useState(false);
+  const { completed, setCompleted } = useContext(TaskContext);
 
   return (
     <div className="taskProgress">
-      {done ? <Check> </Check> : <Circle></Circle>}
-      <Button onClick={() => setDone(!done)}>{done ? "Unmark" : "Mark"}</Button>
+      {completed ? <Check> </Check> : <Circle></Circle>}
+      <Button onClick={() => setCompleted(!completed)}>
+        {completed ? "Unmark" : "Mark"}
+      </Button>
     </div>
   );
 }
 
 function TaskTimer() {
-  const intervalRef = useRef(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const { setCompleted } = useContext(TaskContext);
 
+  const { playsound } = useWithSound(sailormoon);
   const [countdown, setCountdown] = useState("00:00:00");
 
   const getTimeRemaining = (startTime: Date) => {
     const total = startTime.getTime() - Date.now();
-    if (total >= 0) {
+    if (total > 0) {
       const seconds = Math.floor((total / 1000) % 60);
       const minutes = Math.floor((total / 1000 / 60) % 60);
       const hours = Math.floor((total / 1000 / 60 / 60) % 24);
@@ -33,6 +40,8 @@ function TaskTimer() {
           (seconds > 9 ? seconds : "0" + seconds)
       );
     } else {
+      playsound();
+      setCompleted(true);
       clearTimer();
     }
   };
@@ -47,7 +56,7 @@ function TaskTimer() {
     );
     intervalRef.current = setInterval(() => {
       getTimeRemaining(startTime);
-    }, 1000);
+    }, 100);
   };
 
   const clearTimer = () => {
@@ -57,7 +66,7 @@ function TaskTimer() {
     }
   };
 
-  const [time, setTime] = useState<string>("0,5,0");
+  const [time, setTime] = useState<string>("0,0,10");
   return (
     <>
       <div>
@@ -68,9 +77,11 @@ function TaskTimer() {
           value={time}
           onChange={(event) => {
             clearTimer();
+            setCompleted(false);
             setTime(event.target.value);
           }}
         >
+          <MenuItem value={"0,0,10"}>10 seconds</MenuItem>
           <MenuItem value={"0,5,0"}>5 mins</MenuItem>
           <MenuItem value={"0,15,0"}>15 mins</MenuItem>
           <MenuItem value={"0,30,0"}>30 mins</MenuItem>
@@ -93,11 +104,15 @@ function TaskTimer() {
 }
 
 export default function Task() {
+  const [completed, setCompleted] = useState<boolean>(false);
+
   return (
-    <div className="task">
-      <p className="taskTitle">Task</p>
-      <TaskProgress />
-      <TaskTimer />
-    </div>
+    <TaskContext.Provider value={{ completed, setCompleted }}>
+      <div className="task">
+        <p className="taskTitle">Task</p>
+        <TaskProgress />
+        <TaskTimer />
+      </div>
+    </TaskContext.Provider>
   );
 }
