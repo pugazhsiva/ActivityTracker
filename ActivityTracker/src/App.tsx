@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "@assets/react.svg";
 import viteLogo from "/vite.svg";
 import "@/App.css";
 import Task from "@components/Task";
+import AddTask from "@components/AddTask";
+import { error } from "console";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [thing, setThing] = useState<string>("");
+
+  useEffect(() => {
+    const g = async () => {
+      const data = await fetch("http://localhost:5000/home");
+      data.text().then(
+        (value) => {
+          setThing(value);
+          console.log(thing);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    };
+    g();
+  });
 
   return (
     <>
@@ -30,6 +49,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
       <Task />
+      <AddTask />
     </>
   );
 }

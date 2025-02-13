@@ -1,7 +1,7 @@
 import { Check, Circle } from "@mui/icons-material";
 import "./Task.css";
 import { useState, useRef, useContext } from "react";
-import { Button, MenuItem, Select } from "@mui/material";
+import { Button, Slider } from "@mui/material";
 import sailormoon from "@assets/sailormoon.mp3";
 import useWithSound from "@hooks/soundHook";
 import { TaskContext } from "@/Contexts";
@@ -46,13 +46,13 @@ function TaskTimer() {
     }
   };
 
-  const startTimer = () => {
+  const startTimer = (hours: number, mins: number, secs: number) => {
     const startTime = new Date();
-    const timeNum = time.split(",").map((item) => Number(item));
+
     startTime.setHours(
-      startTime.getHours() + timeNum[0],
-      startTime.getMinutes() + timeNum[1],
-      startTime.getSeconds() + timeNum[2]
+      startTime.getHours() + hours,
+      startTime.getMinutes() + mins,
+      startTime.getSeconds() + secs
     );
     intervalRef.current = setInterval(() => {
       getTimeRemaining(startTime);
@@ -66,34 +66,48 @@ function TaskTimer() {
     }
   };
 
-  const [time, setTime] = useState<string>("0,0,10");
+  const [hours, setHours] = useState<number>(1);
+  const [mins, setMins] = useState<number>(5);
+
   return (
     <>
       <div>
         <h2>{countdown}</h2>
       </div>
       <div>
-        <Select
-          value={time}
-          onChange={(event) => {
-            clearTimer();
-            setCompleted(false);
-            setTime(event.target.value);
+        <p>Hours</p>
+        <Slider
+          aria-label="Hours"
+          valueLabelDisplay="auto"
+          step={1}
+          marks
+          defaultValue={1}
+          min={0}
+          max={5}
+          onChange={(event, value) => {
+            setHours(value as number);
           }}
-        >
-          <MenuItem value={"0,0,10"}>10 seconds</MenuItem>
-          <MenuItem value={"0,5,0"}>5 mins</MenuItem>
-          <MenuItem value={"0,15,0"}>15 mins</MenuItem>
-          <MenuItem value={"0,30,0"}>30 mins</MenuItem>
-          <MenuItem value={"1,0,0"}>1 hour</MenuItem>
-        </Select>
+        />
+        <p>Mins</p>
+        <Slider
+          marks
+          aria-label="Minutes"
+          valueLabelDisplay="auto"
+          step={5}
+          defaultValue={5}
+          min={0}
+          max={60}
+          onChange={(event, value) => {
+            setMins(value as number);
+          }}
+        />
       </div>
       <Button
         onClick={() => {
           if (intervalRef) {
             clearTimer();
           }
-          startTimer();
+          startTimer(hours, mins, 0);
         }}
       >
         Start
@@ -107,6 +121,7 @@ export default function Task() {
   const [completed, setCompleted] = useState<boolean>(false);
 
   return (
+    //add task edit function
     <TaskContext.Provider value={{ completed, setCompleted }}>
       <div className="task">
         <p className="taskTitle">Task</p>
