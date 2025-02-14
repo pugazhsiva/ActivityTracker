@@ -1,4 +1,4 @@
-import { createContext, SetStateAction } from "react";
+import React, { createContext, SetStateAction } from "react";
 
 export const TaskContext = createContext<{
   completed: boolean;
@@ -6,4 +6,12 @@ export const TaskContext = createContext<{
 }>({
   completed: false,
   setCompleted: () => {},
+});
+
+export const AuthContext = createContext<{
+  token: null | string;
+  setToken: React.Dispatch<SetStateAction<string | null>>;
+}>({
+  token: null,
+  setToken: () => {},
 });
