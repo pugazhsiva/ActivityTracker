@@ -84,7 +84,7 @@ function TaskTimer() {
           defaultValue={1}
           min={0}
           max={5}
-          onChange={(event, value) => {
+          onChange={(_, value) => {
             setHours(value as number);
           }}
         />
@@ -97,7 +97,7 @@ function TaskTimer() {
           defaultValue={5}
           min={0}
           max={60}
-          onChange={(event, value) => {
+          onChange={(_, value) => {
             setMins(value as number);
           }}
         />

@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-export default function useWithSound(source) {
+export default function useWithSound(source: string | undefined) {
   const soundRef = useRef<HTMLAudioElement>();
 
   useEffect(() => {
@@ -8,7 +8,9 @@ export default function useWithSound(source) {
   });
 
   function playsound() {
-    soundRef.current.play();
+    soundRef.current!.play().catch((error) => {
+      console.log(error);
+    });
   }
 
   return { playsound };

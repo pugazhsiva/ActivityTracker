@@ -3,8 +3,8 @@ import { AddCircleRounded } from "@mui/icons-material";
 import { useState } from "react";
 
 function TaskInputs() {
-  const [hours, setHours] = useState<number>(1);
-  const [mins, setMins] = useState<number>(5);
+  const [_hours, setHours] = useState<number>(1);
+  const [_mins, setMins] = useState<number>(5);
 
   return (
     <Container>
@@ -18,7 +18,7 @@ function TaskInputs() {
         defaultValue={1}
         min={0}
         max={5}
-        onChange={(event, value) => {
+        onChange={(_, value) => {
           setHours(value as number);
         }}
       />
@@ -31,7 +31,7 @@ function TaskInputs() {
         defaultValue={5}
         min={0}
         max={60}
-        onChange={(event, value) => {
+        onChange={(_, value) => {
           setMins(value as number);
         }}
       />
