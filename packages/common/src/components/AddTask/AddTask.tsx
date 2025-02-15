@@ -5,6 +5,7 @@ import { useState } from "react";
 function TaskInputs() {
   const [hours, setHours] = useState<number>(1);
   const [mins, setMins] = useState<number>(5);
+
   return (
     <Container>
       <TextField variant="outlined" label="Task Title" required />

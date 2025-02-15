@@ -1,13 +1,13 @@
-import { useState, useEffect, useContext } from "react";
-import reactLogo from "@assets/react.svg";
+import { useState, useContext } from "react";
+import { react } from "@activitytracker/common";
 import viteLogo from "/vite.svg";
 import "@/App.css";
-import Task from "@components/Task";
-import AddTask from "@components/AddTask";
-import SignUp from "@components/Auth";
+import { Task } from "@activitytracker/common";
+
+import AddTask from "@activitytracker/common/src/components";
+import { SignUp } from "@activitytracker/common";
 import { Button } from "@mui/material";
-import { AuthContext } from "./Contexts";
-import { error } from "console";
+import { AuthContext } from "@activitytracker/common";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -41,7 +41,7 @@ function App() {
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img src={react} className="logo react" alt="React logo" />
         </a>
       </div>
       <h1>Vite + React</h1>

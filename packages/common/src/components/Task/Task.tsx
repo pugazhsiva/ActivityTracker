@@ -2,9 +2,9 @@ import { Check, Circle } from "@mui/icons-material";
 import "./Task.css";
 import { useState, useRef, useContext } from "react";
 import { Button, Slider } from "@mui/material";
-import sailormoon from "@assets/sailormoon.mp3";
-import useWithSound from "@hooks/soundHook";
-import { TaskContext } from "@/Contexts";
+import { sailormoon } from "../../assets";
+import useWithSound from "../../hooks";
+import { TaskContext } from "../../contexts";
 
 function TaskProgress() {
   const { completed, setCompleted } = useContext(TaskContext);
@@ -117,7 +117,7 @@ function TaskTimer() {
   );
 }
 
-export default function Task() {
+export function Task() {
   const [completed, setCompleted] = useState<boolean>(false);
 
   return (

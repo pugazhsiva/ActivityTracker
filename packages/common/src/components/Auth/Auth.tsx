@@ -1,9 +1,8 @@
-import { FormEvent, FormEventHandler, useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { TextField, Button } from "@mui/material";
-import { error } from "console";
-import { AuthContext } from "@/Contexts";
+import { AuthContext } from "../../contexts";
 
-export default function SignUp() {
+export function SignUp() {
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;
