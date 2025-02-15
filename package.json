@@ -1,0 +1,45 @@
+{
+  "name": "activitytracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "packages/common",
+    "packages/web",
+    "packages/mobile",
+    "packages/backend"
+  ],
+  "scripts": {
+    "start:web": "npm run dev --workspace=packages/web",
+    "start:mobile": "npm run dev --workspace=packages/mobile",
+    "start:backend": "npm run dev --workspace=packages/backend"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/roboto": "^5.1.1",
+    "@mui/icons-material": "^6.4.2",
+    "@mui/material": "^6.4.2",
+    "@mui/x-date-pickers": "^7.26.0",
+    "@supabase/supabase-js": "^2.48.1",
+    "cors": "^2.8.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^7.1.5"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^22.13.2",
+    "eslint": "^9.20.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
+  }
+}
