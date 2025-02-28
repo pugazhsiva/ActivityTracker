@@ -2,7 +2,7 @@ import { FormEvent, useContext, useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { AuthContext } from "../../contexts";
 
-export function SignUp() {
+export function SignIn() {
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;
@@ -13,14 +13,14 @@ export function SignUp() {
   function signin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const token = async () => {
-      const data = await fetch("http://localhost:5000/signup", {
+      const data = await fetch("http://localhost:5000/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-
+        credentials: "include",
         body: JSON.stringify(credentials),
       });
 
-      data.text().then(
+      data.json().then(
         (value) => {
           setToken(value);
         },

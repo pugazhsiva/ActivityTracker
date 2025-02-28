@@ -3,6 +3,8 @@
   "include": ["./*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2020"],
     "allowJs": true,
     "esModuleInterop": true
   }

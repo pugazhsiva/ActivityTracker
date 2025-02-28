@@ -1,33 +1,44 @@
-import { useState, useContext } from "react";
-import { react } from "@activitytracker/common";
-import viteLogo from "/vite.svg";
+import { useState, useContext, useEffect } from "react";
 import "@/App.css";
 import { Task } from "@activitytracker/common";
 
-import AddTask from "@activitytracker/common/src/components";
-import { SignUp } from "@activitytracker/common";
+import { AddTask } from "@activitytracker/common/src/components";
+
 import { Button } from "@mui/material";
 import { AuthContext } from "@activitytracker/common";
+import { Link } from "react-router";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [thing, setThing] = useState({});
   const { token } = useContext(AuthContext);
+  const [tasksObject, setTaskObject] = useState<
+    {
+      created_at: string;
+      id: number;
+      task_days: string[];
+      task_hours: number;
+      task_mins: number;
+      task_title: string;
+      user_id: string | null;
+    }[]
+  >([]);
+  useEffect(() => {
+    fetchTask().catch((error) => {
+      console.log(error);
+    });
+  }, [token]);
 
   const fetchTask = async () => {
     if (token) {
       const data = await fetch("http://localhost:5000/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ token: token }),
       });
       data.json().then(
-        (value) => {
-          setThing(value);
-          console.log(thing);
-        },
-        (error) => {
-          console.log(error);
+        (data) => setTaskObject(data),
+        (e) => {
+          console.log(e);
         }
       );
     }
@@ -35,38 +46,21 @@ function App() {
 
   return (
     <>
-      <SignUp />
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={react} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <Task />
       <AddTask />
-      <Button
-        onClick={() => {
-          fetchTask().catch((error) => {
-            console.log(error);
-          });
-        }}
-      >
-        Fetch Task
+      <>
+        {tasksObject.map((task) => (
+          <Task
+            key={task.id}
+            id={task.id}
+            title={task.task_title}
+            timer={{ hours: task.task_hours, mins: task.task_mins }}
+            days={task.task_days}
+          />
+        ))}
+      </>
+
+      <Button to="/login" component={Link}>
+        loga
       </Button>
     </>
   );

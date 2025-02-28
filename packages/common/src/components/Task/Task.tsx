@@ -3,8 +3,9 @@ import "./Task.css";
 import { useState, useRef, useContext } from "react";
 import { Button, Slider } from "@mui/material";
 import { sailormoon } from "../../assets";
-import useWithSound from "../../hooks";
+import { useWithSound } from "../../hooks";
 import { TaskContext } from "../../contexts";
+import EditTask from "../EditTask/EditTask";
 
 function TaskProgress() {
   const { completed, setCompleted } = useContext(TaskContext);
@@ -18,8 +19,11 @@ function TaskProgress() {
     </div>
   );
 }
+export type TaskTimerProps = { hours: number; mins: number };
 
-function TaskTimer() {
+function TaskTimer(props: TaskTimerProps) {
+  const [hours, setHours] = useState<number>(props.hours);
+  const [mins, setMins] = useState<number>(props.mins);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
   const { setCompleted } = useContext(TaskContext);
 
@@ -66,41 +70,10 @@ function TaskTimer() {
     }
   };
 
-  const [hours, setHours] = useState<number>(1);
-  const [mins, setMins] = useState<number>(5);
-
   return (
     <>
       <div>
         <h2>{countdown}</h2>
-      </div>
-      <div>
-        <p>Hours</p>
-        <Slider
-          aria-label="Hours"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          defaultValue={1}
-          min={0}
-          max={5}
-          onChange={(_, value) => {
-            setHours(value as number);
-          }}
-        />
-        <p>Mins</p>
-        <Slider
-          marks
-          aria-label="Minutes"
-          valueLabelDisplay="auto"
-          step={5}
-          defaultValue={5}
-          min={0}
-          max={60}
-          onChange={(_, value) => {
-            setMins(value as number);
-          }}
-        />
       </div>
       <Button
         onClick={() => {
@@ -117,17 +90,25 @@ function TaskTimer() {
   );
 }
 
-export function Task() {
+export type TaskProps = {
+  title: string;
+  timer: TaskTimerProps;
+  days: string[];
+  id: number;
+};
+
+export function Task(props: TaskProps) {
   const [completed, setCompleted] = useState<boolean>(false);
 
   return (
     //add task edit function
-    <TaskContext.Provider value={{ completed, setCompleted }}>
+    <TaskContext value={{ completed, setCompleted }}>
       <div className="task">
-        <p className="taskTitle">Task</p>
+        <p className="taskTitle">{props.title}</p>
         <TaskProgress />
-        <TaskTimer />
+        <TaskTimer {...props.timer} />
+        <EditTask id={props.id} />
       </div>
-    </TaskContext.Provider>
+    </TaskContext>
   );
 }

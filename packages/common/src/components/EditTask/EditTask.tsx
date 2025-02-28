@@ -1,37 +1,14 @@
+import { Check, Circle } from "@mui/icons-material";
+
+import { useState, useRef, useContext } from "react";
 import {
   Button,
-  TextField,
-  Dialog,
-  Container,
   Slider,
+  TextField,
   ToggleButtonGroup,
   ToggleButton,
+  Dialog,
 } from "@mui/material";
-import { AddCircleRounded } from "@mui/icons-material";
-import { useState } from "react";
-
-const sendTask = async (
-  title: string,
-  hours: number,
-  mins: number,
-  days: string[]
-) => {
-  const response = await fetch("http://localhost:5000/addtask", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      hours,
-      mins,
-      days,
-    }),
-  });
-  if (response.ok) {
-    console.log("Task added");
-  }
-};
 
 const weekdays = [
   { name: "Sunday", value: 0 },
@@ -43,7 +20,32 @@ const weekdays = [
   { name: "Saturday", value: 6 },
 ];
 
-function TaskInputs() {
+const sendEdit = async (
+  title: string,
+  hours: number,
+  mins: number,
+  days: string[],
+  id: number
+) => {
+  const response = await fetch("http://localhost:5000/edittask", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      hours,
+      mins,
+      days,
+      id,
+    }),
+  });
+  if (response.ok) {
+    console.log("Task added");
+  }
+};
+
+export function TaskEditor(props: { id: number }) {
   const [title, setTitle] = useState<string>("");
   const [hours, setHours] = useState<number>(1);
   const [mins, setMins] = useState<number>(5);
@@ -58,7 +60,7 @@ function TaskInputs() {
   ]);
 
   return (
-    <Container>
+    <>
       <TextField
         variant="outlined"
         label="Task Title"
@@ -68,32 +70,34 @@ function TaskInputs() {
           setTitle(e.target.value);
         }}
       />
-      <p>Hours</p>
-      <Slider
-        aria-label="Hours"
-        valueLabelDisplay="auto"
-        step={1}
-        marks
-        defaultValue={1}
-        min={0}
-        max={5}
-        onChange={(_, value) => {
-          setHours(value as number);
-        }}
-      />
-      <p>Mins</p>
-      <Slider
-        marks
-        aria-label="Minutes"
-        valueLabelDisplay="auto"
-        step={5}
-        defaultValue={5}
-        min={0}
-        max={60}
-        onChange={(_, value) => {
-          setMins(value as number);
-        }}
-      />
+      <div>
+        <p>Hours</p>
+        <Slider
+          aria-label="Hours"
+          valueLabelDisplay="auto"
+          step={1}
+          marks
+          defaultValue={1}
+          min={0}
+          max={5}
+          onChange={(_, value) => {
+            setHours(value as number);
+          }}
+        />
+        <p>Mins</p>
+        <Slider
+          marks
+          aria-label="Minutes"
+          valueLabelDisplay="auto"
+          step={5}
+          defaultValue={5}
+          min={0}
+          max={60}
+          onChange={(_, value) => {
+            setMins(value as number);
+          }}
+        />
+      </div>
       <ToggleButtonGroup
         value={days}
         onChange={(e: React.MouseEvent<HTMLElement>, value: string[]) => {
@@ -110,18 +114,18 @@ function TaskInputs() {
       </ToggleButtonGroup>
       <Button
         onClick={() => {
-          sendTask(title, hours, mins, days).catch((e) => {
+          sendEdit(title, hours, mins, days, props.id).catch((e) => {
             console.log(e);
           });
         }}
       >
         Add Task
       </Button>
-    </Container> //add dates  and sound upload
+    </>
   );
 }
 
-export default function AddTask() {
+export default function EditTask(props: { id: number }) {
   const [visible, setVisible] = useState<boolean>(false);
   return (
     <>
@@ -130,7 +134,7 @@ export default function AddTask() {
           setVisible(true);
         }}
       >
-        <AddCircleRounded />
+        <Check />
       </Button>
 
       <Dialog
@@ -139,7 +143,7 @@ export default function AddTask() {
           setVisible(false);
         }}
       >
-        <TaskInputs />
+        <TaskEditor id={props.id} />
       </Dialog>
     </>
   );
